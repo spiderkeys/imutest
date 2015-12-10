@@ -3,7 +3,7 @@
 // Includes
 #include "CModule.h"
 
-class CLSD : public CModule
+class CBNO055 : public CModule
 {
 public:
 	void Initialize();

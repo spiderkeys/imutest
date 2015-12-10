@@ -10,7 +10,8 @@
  /home/openrov/Downloads/arduino-1.6.5-r5/hardware/arduino/avr/cores/arduino/USBAPI.h \
  /home/openrov/Downloads/arduino-1.6.5-r5/hardware/arduino/avr/cores/arduino/Arduino.h \
  /home/openrov/Downloads/arduino-1.6.5-r5/hardware/arduino/avr/variants/mega/pins_arduino.h \
- ../CLSD.h ../CI2C.h ../ImuTester.ino
+ ../CI2C.h ../CBMX.cpp ../Config.h ../CBNO055.h ../CModule.h ../CLSD.cpp \
+ ../CPin.h ../ImuTester.ino
 
 /home/openrov/Downloads/arduino-1.6.5-r5/hardware/arduino/avr/cores/arduino/Arduino.h:
 
@@ -34,8 +35,18 @@
 
 /home/openrov/Downloads/arduino-1.6.5-r5/hardware/arduino/avr/variants/mega/pins_arduino.h:
 
-../CLSD.h:
-
 ../CI2C.h:
+
+../CBMX.cpp:
+
+../Config.h:
+
+../CBNO055.h:
+
+../CModule.h:
+
+../CLSD.cpp:
+
+../CPin.h:
 
 ../ImuTester.ino:
