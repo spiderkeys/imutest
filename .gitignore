@@ -1,2 +1,13 @@
+!*.cpp
+!*.c
+!*.h
+!*.hpp
+!*.ino
+!.gitignore
+
+Release/
+Libraries/
+arduino/
+.directory
 *.d
 *.o
