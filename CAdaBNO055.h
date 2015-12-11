@@ -231,7 +231,7 @@ public:
 		VECTOR_GRAVITY       = BNO055_GRAVITY_DATA_X_LSB_ADDR
 	};
 
-	CAdaBNO055( int32_t sensorIdIn = -1, uint8_t addressIn = BNO055_ADDRESS_A );
+	CAdaBNO055( int32_t sensorIdIn = -1, uint8_t addressIn = BNO055_ADDRESS_B );
 
 	bool Initialize();
 	bool Reset();

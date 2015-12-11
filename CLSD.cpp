@@ -432,7 +432,7 @@ namespace lsd
 		STAT = ReadByte(EM7180_ADDRESS, EM7180_ParamAcknowledge);
 	  }
 	  I2c.write(EM7180_ADDRESS, EM7180_ParamRequest, 0x00); //Parameter request = 0 to end parameter transfer process
-	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x00); // Re-start algorithm
+	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x04); // Re-start algorithm
 	}
 
 	void EM7180_set_mag_acc_FS (uint16_t mag_fs, uint16_t acc_fs) {
@@ -452,7 +452,7 @@ namespace lsd
 		STAT = ReadByte(EM7180_ADDRESS, EM7180_ParamAcknowledge);
 	  }
 	  I2c.write(EM7180_ADDRESS, EM7180_ParamRequest, 0x00); //Parameter request = 0 to end parameter transfer process
-	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x00); // Re-start algorithm
+	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x04); // Re-start algorithm
 	}
 
 	void EM7180_set_integer_param (uint8_t param, uint32_t param_val) {
@@ -473,7 +473,7 @@ namespace lsd
 		STAT = ReadByte(EM7180_ADDRESS, EM7180_ParamAcknowledge);
 	  }
 	  I2c.write(EM7180_ADDRESS, EM7180_ParamRequest, 0x00); //Parameter request = 0 to end parameter transfer process
-	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x00); // Re-start algorithm
+	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x04); // Re-start algorithm
 	}
 
 	void EM7180_set_float_param (uint8_t param, float param_val) {
@@ -491,7 +491,7 @@ namespace lsd
 		STAT = ReadByte(EM7180_ADDRESS, EM7180_ParamAcknowledge);
 	  }
 	  I2c.write(EM7180_ADDRESS, EM7180_ParamRequest, 0x00); //Parameter request = 0 to end parameter transfer process
-	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x00); // Re-start algorithm
+	  I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x04); // Re-start algorithm
 	}
 	void readSENtralQuatData(float * destination)
 	{
@@ -591,7 +591,7 @@ namespace lsd
 		I2c.write(EM7180_ADDRESS, EM7180_GyroRate, 0x13);  // 190/10 Hz
 
 		// Configure operating mode
-		I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x00); // read scale sensor data
+		I2c.write(EM7180_ADDRESS, EM7180_AlgorithmControl, 0x04); // read scale sensor data
 
 		// Enable interrupt to host upon certain events
 		// choose host interrupts when any sensor updated (0x40), new gyro data (0x20), new accel data (0x10),
@@ -699,13 +699,31 @@ namespace lsd
 		}
 
 		//Hardware AHRS:
-		Yaw   = atan2(2.0f * (Quat[0] * Quat[1] + Quat[3] * Quat[2]), Quat[3] * Quat[3] + Quat[0] * Quat[0] - Quat[1] * Quat[1] - Quat[2] * Quat[2]);
-		Pitch = -asin(2.0f * (Quat[0] * Quat[2] - Quat[3] * Quat[1]));
-		Roll  = atan2(2.0f * (Quat[3] * Quat[0] + Quat[1] * Quat[2]), Quat[3] * Quat[3] - Quat[0] * Quat[0] - Quat[1] * Quat[1] + Quat[2] * Quat[2]);
-		Pitch *= 180.0f / PI;
-		Yaw   *= 180.0f / PI;
-		Yaw   -= 13.8f; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
-		Roll  *= 180.0f / PI;
+		//Yaw   	= atan2(2.0f * (Quat[0] * Quat[1] + Quat[3] * Quat[2]), Quat[3] * Quat[3] + Quat[0] * Quat[0] - Quat[1] * Quat[1] - Quat[2] * Quat[2]);
+		//Pitch 	= -asin(2.0f * (Quat[0] * Quat[2] - Quat[3] * Quat[1]));
+		//Roll  	= -atan2(2.0f * (Quat[3] * Quat[0] + Quat[1] * Quat[2]), Quat[3] * Quat[3] - Quat[0] * Quat[0] - Quat[1] * Quat[1] + Quat[2] * Quat[2]);
+
+		
+		Yaw = Quat[ 0 ];
+		Pitch = Quat[ 1 ];
+		Roll = Quat[ 2 ];
+		
+		Pitch 	*= -180.0f / PI;
+		
+		Yaw   	*= 180.0f / PI;
+		Yaw += 180.0f;
+		
+		Roll  	*= 180.0f / PI;
+		
+		Roll = fmod(Roll,360.0f);
+		
+	    if (Roll < 0.0f)
+	    {
+	        Roll += 360.0f;
+	    }
+	    
+	    Roll =  -( Roll - 180.0f);
+		
 
 		// Or define output variable according to the Android system, where heading (0 to 260) is defined by the angle between the y-axis
 		// and True North, pitch is rotation about the x-axis (-180 to +180), and roll is rotation about the y-axis (-90 to +90)
@@ -714,11 +732,12 @@ namespace lsd
 		//
 		int delt_t = millis() - count;
 
-		if (delt_t > 10)
+		if (delt_t >= 10)
 		{ // update LCD once per half-second independent of read rate
 
 			if(SerialDebug)
 			{
+				Serial.print("LSD\t");
 				Serial.print(Roll, 2);
 				Serial.print('\t');
 				Serial.print(Pitch, 2);

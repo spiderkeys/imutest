@@ -1,6 +1,5 @@
 
 #include "Config.h"
-#if IMU_SEL == IMU_BNO
 
 
 #include "CBNO055.h"
@@ -15,6 +14,7 @@ namespace
 	CTimer fusionTimer;
 
 	bool initalized				= false;
+	bool browserPingReceived	= false;
 
 	bool inFusionMode			= false;
 
@@ -65,6 +65,8 @@ void CBNO055::Initialize()
 	fusionTimer.Reset();
 }
 
+
+
 void CBNO055::Update()
 {
 	// 100hz
@@ -86,25 +88,35 @@ void CBNO055::Update()
 		bno.GetSystemStatus();
 		bno.GetSystemError();
 		bno.GetVector( CAdaBNO055::VECTOR_EULER, euler );
+		
 
-		yaw		= euler.x();
-		pitch	= euler.z();
-		roll	= -euler.y();
+   
+		yaw = fmod(euler.x() + 90.0f,360.0f);
+		
+    	if (yaw < 0.0f)
+    	{
+        	yaw += 360.0f;
+    	}
+		
+		
+		pitch		= euler.y();
+		roll			= euler.z();
 
-		Serial.print(millis());
-		Serial.print('\t');
-		Serial.print(bno.m_systemStatus);
-		Serial.print('\t');
-		Serial.print(bno.m_systemError);
-		Serial.print('\t');
-		Serial.print(bno.m_systemCal);
-		Serial.print('\t');
-		Serial.print(bno.m_accelCal);
-		Serial.print('\t');
-		Serial.print(bno.m_gyroCal);
-		Serial.print('\t');
-		Serial.print(bno.m_magCal);
-		Serial.print('\t');
+		// Serial.print(millis());
+		// Serial.print('\t');
+		// Serial.print(bno.m_systemStatus);
+		// Serial.print('\t');
+		// Serial.print(bno.m_systemError);
+		// Serial.print('\t');
+		// Serial.print(bno.m_systemCal);
+		// Serial.print('\t');
+		// Serial.print(bno.m_accelCal);
+		// Serial.print('\t');
+		// Serial.print(bno.m_gyroCal);
+		// Serial.print('\t');
+		// Serial.print(bno.m_magCal);
+		// Serial.print('\t');
+		Serial.print("BNO\t");
 		Serial.print(roll, 2);
 		Serial.print('\t');
 		Serial.print(pitch, 2);
@@ -112,5 +124,3 @@ void CBNO055::Update()
 		Serial.println(yaw, 2);
 	}
 }
-
-#endif

@@ -1,18 +1,19 @@
 #include <Arduino.h>
 
 #include "CI2C.h"
-#include "CBMX.cpp"
+#include "CBMX.h"
 #include "CBNO055.h"
-#include "CLSD.cpp"
+#include "CLSD.h"
 #include "CPin.h"
 
 #define I2CPOWER_PIN			48
 
-//CLSD lsdImu;
+CLSD lsdImu;
 //CBMX bmxImu;
 CBNO055 bno;
 
 CModule *imu = &bno;
+CModule *imu2 = &lsdImu;
 
 CPin i2cpower( "i2cpower", I2CPOWER_PIN, CPin::kDigital, CPin::kOutput );
 
@@ -38,10 +39,12 @@ void setup()
 	delay( 1000 );
 
 	imu->Initialize();
+	imu2->Initialize();
 }
 
 // The loop function is called in an endless loop
 void loop()
 {
 	imu->Update();
+	imu2->Update();
 }

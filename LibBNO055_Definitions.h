@@ -1,7 +1,7 @@
 #pragma once
 
 // Device I2C address
-#define BNO055_ADDRESS 0x28
+#define BNO055_ADDRESS 0x29
 
 // BNO055 Register Map
 // http://ae-bst.resource.bosch.com/media/products/dokumente/bno055/BST_BNO055_DS000_10_Release.pdf

@@ -600,7 +600,7 @@ bool CAdaBNO055::SetUpUnitsAndOrientation()
 	// Wires forward, sensors down
 	// What this actually means is: X=X, Y=-Y, Z=-Z
 	ret &= WriteByte( BNO055_AXIS_MAP_CONFIG_ADDR, 0x24 );	// This is the default value
-	ret &= WriteByte( BNO055_AXIS_MAP_SIGN_ADDR, 0x03 );		// Negate Y and Z axes from default (Z-down configuration)
+	ret &= WriteByte( BNO055_AXIS_MAP_SIGN_ADDR, 0x00 );		// Negate Y and Z axes from default (Z-down configuration)
 
 	if( !ret )
 	{
